@@ -59,8 +59,8 @@ function setMenu() {
           click(item, focusedWindow) {
             dialog.showSaveDialog(fileName => {
               if(fileName === undefined) return;
-              let arg = mainWindow.webContents.send('getText', '');
-              fs.writeFile(fileName, arg, err => {});
+              let ret = mainWindow.webContents.send('getText', '');
+              ret ? mainWindow.webContents.send('saveText', fileName) : dialog.showErrorBox("Document Save Error" , "Couldn't retrieve text to save. Are there any contents in your document?");
             });
           }
         }
