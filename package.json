@@ -1,7 +1,7 @@
 {
   "name": "xkcd-simplewriter",
   "productName": "SimpleWriter",
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "An Electron App of the XKCD Simple Writer",
   "license": "MIT",
   "repository": "tcyrus/xkcd-simplewriter",
