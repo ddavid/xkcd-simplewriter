@@ -60,7 +60,11 @@
     <script>
       'use strict';
       const electron = require('electron');
+      const fs = require('fs');
       const ipcRenderer = electron.ipcRenderer;
+      
+      window.filewrite_event = false;
+      window.fileName = '';
 
       document.ondragover = document.ondrop = e => {
         e.preventDefault();
@@ -82,10 +86,27 @@
 
       ipcRenderer.on('getText', (e, arg) => {
         e.returnValue = editor.getValue();
+        window.filewrite_event = e;
       });
 
-      ipcRenderer.on('setText', (e, arg) => {
-        editor.setValue(arg);
+      ipcRenderer.on('saveText', (e, fileName) => {
+        let text = window.filewrite_event.returnValue
+        window.fileName = fileName
+        fs.writeFile(fileName, text, err => {});
+      });
+
+      // Auto-Save after first save and continuing to work on the same document
+      let timer = setInterval(() => {
+        let fileName = window.fileName
+        if(fileName) {
+          let text = window.filewrite_event.returnValue;
+          fs.writeFile(fileName, text, err => {});
+          console.log("Autosaving file to: ", fileName)
+          }
+        }, 10000); // 10 seconds 
+
+      ipcRenderer.on('setText', (e, fileContent) => {
+        editor.setValue(fileContent);
       });
     </script>
   </body>
